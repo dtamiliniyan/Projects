@@ -65,8 +65,8 @@ public class TranslationsRestController implements Translations {
 	 */
 	@Override
 	@RequestMapping(method = RequestMethod.GET)
-	public Map<String, Map<Object, Object>> getTranslations() {
-		return translationService.getTranslations();
+	public Object getTranslations() {
+		return translationService.getTranslation("abc123");
 	}
 
 	/* (non-Javadoc)

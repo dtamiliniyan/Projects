@@ -20,7 +20,6 @@
 		</ul>
 	</div>
 
-
 	<div class="error" id="error">
 		<p style="color: red" th:text="${translationForm.error}" />
 	</div>
@@ -86,10 +85,9 @@
 	<script th:inline="javascript">
 /*<![CDATA[*/
 
-var message;
-mymessage = [[${translationForm.translationJson}]];
-message = JSON.stringify(mymessage);
-message = {"title":"Lost in Translation","login":{"user":"111","pass":"Password"},"home":{"greeting":{"title":"Welcome to my Webpage!","description":"This page is available in a variety of languages."},"footer":{"createdBy":"Created by Bob Harris"}},"copyright":{"message":"All Rights Reserved","year":"2016"},"menu":{"topMenu":{"home":"Home","index":"Index"},"secondaryMenu":{"left":{"riddles":"Riddles","jokes":"Jokes","puns":"Puns"},"right":{"quotes":"Famous Quotes","sayings":"Sayings","proverbs":"Proverbs"}},"bottomMenu":{"facebook":"Facebook","twitter":"Twitter","instagram":"Instagram"}},"quit":"Quit","help":"Help","about":"This website was created entirely out of thin air.","siteMap":{"index":"Index","directory":"Directory"}}
+
+var rawMessage = [[${translationForm.translationJson}]];
+var message=JSON.parse(rawMessage);
 document.getElementById("title").innerHTML = message.title;
 document.getElementById("login.user").innerHTML = message.login.user;
 //document.getElementById("login.pass").innerHTML = message.login.pass;

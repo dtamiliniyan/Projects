@@ -13,7 +13,7 @@ public interface Translations {
 
 	Object getTranslation(String user, String searchBy, String value);
 
-	Map<String, Map<Object, Object>> getTranslations();
+	Object getTranslations();
 
 	ResponseEntity<String> addTranslation(Map<Object, Object> translation, String user);
 

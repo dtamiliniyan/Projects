@@ -54,9 +54,9 @@
 		<form action="#" th:action="@{/adminscreen/search}" th:object="${translationForm}" method="get">
 			<table>
 			<tr><td>Search By: </td><td>
-			 	<input type="radio" th:field="*{searchBy}" value="user"/>User ID
+			 	<input type="radio" th:field="*{searchBy}" value="user" checked="checked"/>User ID
   				<input type="radio" th:field="*{searchBy}" value="key"/>Translation element key
-  				<input type="radio" th:field="*{searchBy}" value="value"/>Translation element value </td></tr>
+  				<input type="radio" th:field="*{searchBy}" value="value"/>Translation element value</td></tr>
 			<tr><td>Input value: </td><td><input type="text" th:field="*{inputValue}" /></td></tr>
 			</table>
 			<p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
