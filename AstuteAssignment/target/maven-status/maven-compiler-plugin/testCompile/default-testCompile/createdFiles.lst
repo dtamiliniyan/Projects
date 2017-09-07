@@ -1,0 +1,4 @@
+com\astute\myweb\WelcomeControllerTest.class
+com\astute\myweb\ApplicationTest.class
+com\astute\myweb\controller\rest\TranslationsRestControllerTest.class
+com\astute\myweb\data\TranslationDataTest.class

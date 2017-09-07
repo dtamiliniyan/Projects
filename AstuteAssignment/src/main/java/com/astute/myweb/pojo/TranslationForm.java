@@ -15,6 +15,8 @@ public class TranslationForm {
 	private String message;
 	private String error;
 	private String user;
+	private String reponseJson;
+	private String operation;
 
 	public String getIsKeySearch() {
 		return isKeySearch;
@@ -80,4 +82,19 @@ public class TranslationForm {
 		this.error = error;
 	}
 
+	public String getReponseJson() {
+		return reponseJson;
+	}
+
+	public void setReponseJson(String reponseJson) {
+		this.reponseJson = reponseJson;
+	}
+
+	public String getOperation() {
+		return operation;
+	}
+
+	public void setOperation(String operation) {
+		this.operation = operation;
+	}
 }

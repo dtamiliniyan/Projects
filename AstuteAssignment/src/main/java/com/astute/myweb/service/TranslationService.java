@@ -3,6 +3,7 @@
  */
 package com.astute.myweb.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,17 +69,6 @@ public class TranslationService {
 	}
 
 	/**
-	 * Update translation element.
-	 * This method retrieve key and value to update specific user translation element.
-	 * @param user
-	 * @param key
-	 * @param value
-	 */
-	public void updateTranslation(String user, String key, String value) {
-		translationData.updateTranslation(user, key, value);
-	}
-
-	/**
 	 * Get translation element by taking key as input
 	 * @param user
 	 * @param searchBy
@@ -94,7 +84,19 @@ public class TranslationService {
 	 * @param value
 	 * @return
 	 */
-	public String getTranslationEntryByValue(String user, String value) {
+	public List<String> getTranslationEntryByValue(String user, String value) {
 		return translationData.getTranslationElementByValue(user, value);
+	}
+
+	/**
+	 * Element level maintenance operations.
+	 * Performs add, update delete element.
+	 * @param user
+	 * @param operation
+	 * @param key
+	 * @param value
+	 */
+	public void elementMaintenance(String user, String operation, String key, String value) {
+		translationData.elementMaintenance(user, operation, key, value);
 	}
 }

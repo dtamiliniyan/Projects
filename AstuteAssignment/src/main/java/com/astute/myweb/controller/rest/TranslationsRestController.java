@@ -4,7 +4,9 @@
 package com.astute.myweb.controller.rest;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -53,9 +55,11 @@ public class TranslationsRestController implements Translations {
 		if (CONSTANTS.TEXT_KEY.equals(searchBy)) {
 			return translationService.getTranslationEntryByKey(user, value);
 		} else if (CONSTANTS.TEXT_VALUE.equals(searchBy)) {
-			return translationService.getTranslationEntryByValue(user, value);
+			List<String> matches = translationService.getTranslationEntryByValue(user, value);
+			String result = matches.stream().map(match -> match+" ").collect(Collectors.joining());
+			return result;
 		}
-		return translationService.getTranslation(user);
+		return translationService.getTranslation(value);
 	}
 
 	/* (non-Javadoc)
@@ -66,7 +70,7 @@ public class TranslationsRestController implements Translations {
 	@Override
 	@RequestMapping(method = RequestMethod.GET)
 	public Object getTranslations() {
-		return translationService.getTranslation("abc123");
+		return translationService.getTranslations();
 	}
 
 	/* (non-Javadoc)
@@ -88,18 +92,22 @@ public class TranslationsRestController implements Translations {
 	 * @see com.astute.myweb.controller.rest.Translations#updateTranslation(java.lang.String, java.lang.String, java.lang.String)
 	 * 
 	 * RESTful service PUT method.
-	 * Updates existing translation element by sending key and value.
+	 * Updates existing translation element by sending operation type, key and value.
+	 * Element level maintenance operations.
+	 * Performs add, update delete element.
 	 * 
 	 */
 	@Override
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<?> updateTranslation(@PathVariable(value = CONSTANTS.TEXT_ID, required = true) String user,
+			@RequestParam(value = CONSTANTS.TEXT_OPERATION, required = true) String operation,
 			@RequestParam(value = CONSTANTS.TEXT_KEY, required = true) String key,
 			@RequestParam(value = CONSTANTS.TEXT_VALUE, required = true) String value) {
 		try {
-			translationService.updateTranslation(user, key, value);
+			translationService.elementMaintenance(user, operation, key, value);
 			return ResponseEntity.ok().build();
 		} catch (Exception exception) {
+			exception.printStackTrace();
 			return ResponseEntity.notFound().build();
 		}
 	}

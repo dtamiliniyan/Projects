@@ -17,7 +17,7 @@ public interface Translations {
 
 	ResponseEntity<String> addTranslation(Map<Object, Object> translation, String user);
 
-	ResponseEntity<?> updateTranslation(String user, String key, String value);
+	ResponseEntity<?> updateTranslation(String user, String operation, String key, String value);
 
 	ResponseEntity<?> deleteTranslation(String user);
 

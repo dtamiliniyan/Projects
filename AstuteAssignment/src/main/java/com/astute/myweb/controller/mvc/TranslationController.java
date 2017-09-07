@@ -85,13 +85,19 @@ public class TranslationController {
 			return CONSTANTS.VIEW_TRANSLATION_ADMIN;
 		}
 		
+		if (StringUtils.isEmpty(translationForm.getSearchBy()) 
+				|| StringUtils.isEmpty(translationForm.getInputValue())) {
+		    translationForm.setError(CONSTANTS.ERROR_INVALID_INPUT);
+			return CONSTANTS.VIEW_TRANSLATION_ADMIN;
+		}
+		
 		params.put(CONSTANTS.TEXT_ID, session.getAttribute(CONSTANTS.TEXT_USER).toString());
 		params.put(CONSTANTS.TEXT_KEY, translationForm.getSearchBy());
 		params.put(CONSTANTS.TEXT_VALUE, translationForm.getInputValue());
 
 		String result = restTemplate.getForObject(CONSTANTS.URI_GET_TRANSLATION_WITH_PARAM, String.class, params);
 		if (result != null) {
-			translationForm.setMessage(result);
+			translationForm.setReponseJson(result);
 		} else {
 			translationForm.setError(CONSTANTS.ERROR_TRANSLATION_NOT_FOUND);
 		}
@@ -111,7 +117,8 @@ public class TranslationController {
 			return CONSTANTS.VIEW_TRANSLATION_ADMIN;
 		}
 		
-		if (StringUtils.isEmpty(translationForm.getKey()) 
+		if (StringUtils.isEmpty(translationForm.getOperation()) 
+				|| StringUtils.isEmpty(translationForm.getKey()) 
 				|| StringUtils.isEmpty(translationForm.getInputValue())) {
 		    translationForm.setError(CONSTANTS.ERROR_INVALID_INPUT);
 			return CONSTANTS.VIEW_TRANSLATION_ADMIN;
@@ -123,6 +130,7 @@ public class TranslationController {
 	    
 		Map<String, String> params = new HashMap<String, String>();
 		params.put(CONSTANTS.TEXT_ID, session.getAttribute(CONSTANTS.TEXT_USER).toString());
+		params.put(CONSTANTS.TEXT_OPERATION, translationForm.getOperation());
 		params.put(CONSTANTS.TEXT_KEY, translationForm.getKey());
 		params.put(CONSTANTS.TEXT_VALUE, translationForm.getInputValue());
 

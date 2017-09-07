@@ -1,0 +1,57 @@
+-------------------------------------------------------------------------------
+Test set: com.astute.myweb.controller.rest.TranslationsRestControllerTest
+-------------------------------------------------------------------------------
+Tests run: 5, Failures: 0, Errors: 5, Skipped: 0, Time elapsed: 0.002 sec <<< FAILURE! - in com.astute.myweb.controller.rest.TranslationsRestControllerTest
+testUpdateTranslation(com.astute.myweb.controller.rest.TranslationsRestControllerTest)  Time elapsed: 0 sec  <<< ERROR!
+org.springframework.web.client.HttpClientErrorException: 404 null
+	at org.springframework.web.client.DefaultResponseErrorHandler.handleError(DefaultResponseErrorHandler.java:63)
+	at org.springframework.web.client.RestTemplate.handleResponse(RestTemplate.java:700)
+	at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:653)
+	at org.springframework.web.client.RestTemplate.execute(RestTemplate.java:621)
+	at org.springframework.web.client.RestTemplate.put(RestTemplate.java:438)
+	at com.astute.myweb.controller.rest.TranslationsRestControllerTest.testUpdateTranslation(TranslationsRestControllerTest.java:103)
+
+testGetTranslations(com.astute.myweb.controller.rest.TranslationsRestControllerTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.IllegalArgumentException: Not enough variable values available to expand 'id'
+	at org.springframework.web.util.UriComponents$VarArgsTemplateVariables.getValue(UriComponents.java:329)
+	at org.springframework.web.util.HierarchicalUriComponents$QueryUriTemplateVariables.getValue(HierarchicalUriComponents.java:899)
+	at org.springframework.web.util.UriComponents.expandUriComponent(UriComponents.java:232)
+	at org.springframework.web.util.HierarchicalUriComponents.expandQueryParams(HierarchicalUriComponents.java:347)
+	at org.springframework.web.util.HierarchicalUriComponents.expandInternal(HierarchicalUriComponents.java:332)
+	at org.springframework.web.util.HierarchicalUriComponents.expandInternal(HierarchicalUriComponents.java:48)
+	at org.springframework.web.util.UriComponents.expand(UriComponents.java:165)
+	at org.springframework.web.util.UriComponentsBuilder.buildAndExpand(UriComponentsBuilder.java:360)
+	at org.springframework.web.util.DefaultUriTemplateHandler.expandAndEncode(DefaultUriTemplateHandler.java:140)
+	at org.springframework.web.util.DefaultUriTemplateHandler.expandInternal(DefaultUriTemplateHandler.java:104)
+	at org.springframework.web.util.AbstractUriTemplateHandler.expand(AbstractUriTemplateHandler.java:106)
+	at org.springframework.web.client.RestTemplate.execute(RestTemplate.java:612)
+	at org.springframework.web.client.RestTemplate.postForObject(RestTemplate.java:380)
+	at com.astute.myweb.controller.rest.TranslationsRestControllerTest.testGetTranslations(TranslationsRestControllerTest.java:65)
+
+testDeleteTranslation(com.astute.myweb.controller.rest.TranslationsRestControllerTest)  Time elapsed: 0 sec  <<< ERROR!
+org.springframework.web.client.HttpClientErrorException: 404 null
+	at org.springframework.web.client.DefaultResponseErrorHandler.handleError(DefaultResponseErrorHandler.java:63)
+	at org.springframework.web.client.RestTemplate.handleResponse(RestTemplate.java:700)
+	at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:653)
+	at org.springframework.web.client.RestTemplate.execute(RestTemplate.java:621)
+	at org.springframework.web.client.RestTemplate.delete(RestTemplate.java:490)
+	at com.astute.myweb.controller.rest.TranslationsRestControllerTest.testDeleteTranslation(TranslationsRestControllerTest.java:117)
+
+testGetTranslation(com.astute.myweb.controller.rest.TranslationsRestControllerTest)  Time elapsed: 0 sec  <<< ERROR!
+org.springframework.web.client.HttpClientErrorException: 400 null
+	at org.springframework.web.client.DefaultResponseErrorHandler.handleError(DefaultResponseErrorHandler.java:63)
+	at org.springframework.web.client.RestTemplate.handleResponse(RestTemplate.java:700)
+	at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:653)
+	at org.springframework.web.client.RestTemplate.execute(RestTemplate.java:621)
+	at org.springframework.web.client.RestTemplate.postForObject(RestTemplate.java:390)
+	at com.astute.myweb.controller.rest.TranslationsRestControllerTest.testGetTranslation(TranslationsRestControllerTest.java:51)
+
+testAddTranslation(com.astute.myweb.controller.rest.TranslationsRestControllerTest)  Time elapsed: 0 sec  <<< ERROR!
+org.springframework.web.client.HttpClientErrorException: 400 null
+	at org.springframework.web.client.DefaultResponseErrorHandler.handleError(DefaultResponseErrorHandler.java:63)
+	at org.springframework.web.client.RestTemplate.handleResponse(RestTemplate.java:700)
+	at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:653)
+	at org.springframework.web.client.RestTemplate.execute(RestTemplate.java:621)
+	at org.springframework.web.client.RestTemplate.postForObject(RestTemplate.java:390)
+	at com.astute.myweb.controller.rest.TranslationsRestControllerTest.testAddTranslation(TranslationsRestControllerTest.java:82)
+

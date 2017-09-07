@@ -1,0 +1,13 @@
+com\astute\myweb\Application.class
+com\astute\myweb\service\TranslationService.class
+com\astute\myweb\controller\rest\TranslationsRestController.class
+com\astute\myweb\controller\mvc\WelcomeController.class
+com\astute\myweb\util\GlobalControllerExceptionHandler.class
+com\astute\myweb\controller\mvc\LoginController.class
+com\astute\myweb\controller\mvc\TranslationController.class
+com\astute\myweb\data\TranslationData.class
+com\astute\myweb\pojo\TranslationForm.class
+com\astute\myweb\util\CONSTANTS.class
+com\astute\myweb\util\UserNotFoundException.class
+com\astute\myweb\controller\rest\Translations.class
+com\astute\myweb\util\InvalidInputDataException.class

@@ -3,9 +3,13 @@
  */
 package com.astute.myweb.data;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 import java.util.Map.Entry;
 
 import org.springframework.stereotype.Component;
@@ -26,7 +30,7 @@ import com.astute.myweb.util.UserNotFoundException;
 @Component
 public class TranslationData {
 
-	private static volatile Map<String, Map<Object, Object>> translations = new HashMap<String, Map<Object, Object>>();
+	private static volatile Map<String, Map<Object, Object>> translations = new ConcurrentHashMap<String, Map<Object, Object>>();
 
 	/**
 	 * Add new translation to in memory storage
@@ -36,7 +40,6 @@ public class TranslationData {
 	 */
 	public String addTranslation(Map<Object, Object> translation, String user) {
 		translations.put(user, translation);
-		System.out.println(translation);
 		return user;
 	}
 
@@ -78,47 +81,68 @@ public class TranslationData {
 	}
 
 	/**
-	 * Update translation element.
-	 * This method retrieve key and value to update specific user translation element.
-	 * @param user
-	 * @param key
-	 * @param value
-	 */
-	public void updateTranslation(String user, String key, String value) {
-		Map<Object, Object> translation = translations.get(user);
-		boolean success = updateTranslationElement(translation, "", key, value);
-		if (!success) {
-			throw new InvalidInputDataException(key);
-		}
-	}
-
-
-	/**
+	 * maintenance of specific element in Translation.
+	 * this method performs all three operations.
 	 * @param map
 	 * @param level
 	 * @param resultMap
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public boolean updateTranslationElement(Map<Object, Object> map, String level, String key, String valueToUpdate) {
-		if (map != null) {
-			Set<Entry<Object, Object>> set = map.entrySet();
+	public boolean elementMaintenance(Map<Object, Object> translation, String operation, String key, String value,
+			List<String> levels, int count) {
+		boolean maintenanceDone = false;
+
+		if (translation != null) {
+
+			Set<Entry<Object, Object>> set = translation.entrySet();
 			for (Map.Entry<Object, Object> entry : set) {
+				if (levels == null) {
+					levels = new ArrayList<String>();
+					levels.add(CONSTANTS.EMPTY_STR);
+				}
 				if (entry.getValue() instanceof Map) {
-					level = level + entry.getKey().toString() + ".";
-					updateTranslationElement((Map<Object, Object>) entry.getValue(), level, key, valueToUpdate);
-					level = "";
+					levels.add(entry.getKey().toString() + ".");
+					maintenanceDone = elementMaintenance((Map<Object, Object>) entry.getValue(), operation, key, value, levels, ++count);
+					levels.remove(--count);
 				} else {
-					if (key.equals((level + entry.getKey().toString()))) {
-						entry.setValue(valueToUpdate);
-						return true;
+					String parent = CONSTANTS.EMPTY_STR;
+					// parent = levels.stream().map(level -> parent +
+					// level).collect(Collectors.joining());
+					for (String level : levels) {
+						parent = parent + level;
 					}
+
+					if (CONSTANTS.OPERATION_UPDATE.equals(operation)) {
+						if (key.equals(parent + entry.getKey().toString())) {
+							entry.setValue(value);
+							maintenanceDone = true;
+						}
+					} else if (CONSTANTS.OPERATION_ADD.equals(operation)) {
+						//Identify key till last dot and compare with parent to identify exact sub-element to add new field.
+						int position = key.lastIndexOf(".");
+						String keyHeader = key.substring(0, position+1);
+						String endKey = key.substring(position+1, key.length());
+						if (keyHeader.equals(parent)) {
+							translation.put(endKey, value);
+							maintenanceDone = true;
+						}
+					} else if (CONSTANTS.OPERATION_DELETE.equals(operation)) {
+						if (key.equals(parent + entry.getKey().toString())) {
+							translation.remove(entry.getKey());
+							maintenanceDone = true;
+						}
+					}
+				}
+				if (maintenanceDone) {
+					break;
 				}
 			}
 		}
-		return false;
+		return maintenanceDone;
 	}
 
+	
 	/**
 	 * Get translation element by taking key as input
 	 * @param user
@@ -128,11 +152,14 @@ public class TranslationData {
 	public String getTranslationElementByKey(String user, String key) {
 		Map<String, String> keyValues = new HashMap<String, String>();
 		Map<Object, Object> translation = translations.get(user);
+		List<String> list = new ArrayList<String>();
+		list.add(CONSTANTS.EMPTY_STR);
+		
 		if (translation == null) {
 			throw new InvalidInputDataException(CONSTANTS.ERROR_TRANSLATION_NOT_FOUND);
 		}
 
-		keyValues = convertMapToKeyValues(translation, CONSTANTS.EMPTY_STR, keyValues);
+		keyValues = convertMapToKeyValues(translation, list, 1, keyValues);
 		return keyValues.get(key);
 	}
 
@@ -143,43 +170,73 @@ public class TranslationData {
 	 * @param value
 	 * @return
 	 */
-	public String getTranslationElementByValue(String user, String value) {
+	public List<String> getTranslationElementByValue(String user, String value) {
 		Map<String, String> keyValues = new HashMap<String, String>();
+
+		List<String> matchingValues = new ArrayList<String>();
 		Map<Object, Object> translation = translations.get(user);
+		
 		if (translation == null) {
 			throw new InvalidInputDataException(CONSTANTS.ERROR_TRANSLATION_NOT_FOUND);
 		}
-		keyValues = convertMapToKeyValues(translation, CONSTANTS.EMPTY_STR, keyValues);
-		Set<Entry<String, String>> set = keyValues.entrySet();
-		for (Map.Entry<String, String> entry : set) {
+		
+		keyValues = convertMapToKeyValues(translation, null, 1, keyValues);
+		
+		Set<Entry<String, String>> entries = keyValues.entrySet();
+		for (Map.Entry<String, String> entry : entries) {
 			if(value.equals(keyValues.get(entry.getKey()))) {
-				return entry.getKey();
+				matchingValues.add(entry.getKey());
 			}
 		}
-		return null;
+		return matchingValues;
 	}
+	
 	
 	/**
 	 * Method to convert Transactions into key value pairs.
 	 * @param map
 	 * @param level
+	 * @param count
 	 * @param resultMap
-	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public Map<String, String> convertMapToKeyValues(Map<Object, Object> map, String level, Map<String, String> resultMap) {
+	private Map<String, String> convertMapToKeyValues(Map<Object, Object> map, List<String> levels, int count, Map<String, String> resultMap) {
 		if (map != null) {
+			if(levels == null) {
+				levels = new ArrayList<String>();
+				levels.add(CONSTANTS.EMPTY_STR);
+			}
 			Set<Entry<Object, Object>> set = map.entrySet();
 			for (Map.Entry<Object, Object> entry : set) {
 				if (entry.getValue() instanceof Map) {
-					level = level + entry.getKey().toString() + ".";
-					convertMapToKeyValues((Map<Object, Object>) entry.getValue(), level, resultMap);
-					level = CONSTANTS.EMPTY_STR;
+					levels.add(entry.getKey().toString() + ".");
+					convertMapToKeyValues((Map<Object, Object>) entry.getValue(), levels, ++count, resultMap);
+					levels.remove(--count);
 				} else {
-					resultMap.put((level + entry.getKey().toString()), entry.getValue().toString());
+					String parent = CONSTANTS.EMPTY_STR;
+					for (String level : levels) {
+						parent = parent + level;
+					}
+					resultMap.put((parent + entry.getKey().toString()), entry.getValue().toString());
 				}
 			}
 		}
 		return resultMap;
+	}
+
+	/**
+	 * Element level maintenance operations.
+	 * Performs add, update delete element.
+	 * @param user
+	 * @param operation
+	 * @param key
+	 * @param value
+	 */
+	public void elementMaintenance(String user, String operation, String key, String value) {
+		Map<Object, Object> translation = translations.get(user);
+		boolean success = elementMaintenance(translation, operation, key, value, null, 1);
+		if (!success) {
+			throw new InvalidInputDataException(key);
+		}
 	}
 }
