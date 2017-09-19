@@ -14,6 +14,7 @@ function openTab(evt, tabName) {
     message.style.display = "none";
     error.style.display = "none";
     reponseJson.style.display = "none";
+    inputValue.style.display = "none";
 }
 
 function displayInputValue(option) {
